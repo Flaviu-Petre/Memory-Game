@@ -1,0 +1,93 @@
+﻿<Window x:Class="MemoryGame.Views.LoginView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MemoryGame.Views"
+        xmlns:vm="clr-namespace:MemoryGame.ViewModels"
+        mc:Ignorable="d"
+        Title="Memory Game - Login" Height="500" Width="600"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <vm:LoginViewModel />
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Create New User Section -->
+        <Border Grid.Column="0" BorderBrush="#CCCCCC" BorderThickness="1" Margin="10" Padding="10">
+            <StackPanel>
+                <TextBlock Text="Create New User" FontWeight="Bold" FontSize="16" Margin="0,0,0,15"/>
+
+                <TextBlock Text="Username:" Margin="0,5"/>
+                <TextBox Text="{Binding NewUsername, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+
+                <TextBlock Text="User Image:" Margin="0,5"/>
+
+                <!-- Image Gallery Section -->
+                <Grid Height="150" Margin="0,5">
+                    <Border BorderBrush="#CCCCCC" BorderThickness="1">
+                        <Image Source="{Binding CurrentDisplayImage}" Stretch="Uniform" Margin="5"/>
+                    </Border>
+                </Grid>
+
+                <!-- Navigation Buttons -->
+                <Grid Margin="0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Content="&lt;" Command="{Binding PreviousImageCommand}" Width="50" Margin="5"/>
+                    <Button Grid.Column="1" Content="Select" Command="{Binding SelectCurrentImageCommand}" Margin="5"/>
+                    <Button Grid.Column="2" Content="&gt;" Command="{Binding NextImageCommand}" Width="50" Margin="5"/>
+                </Grid>
+
+                <!-- Selected Image Path -->
+                <TextBlock Text="{Binding SelectedImagePath}" TextWrapping="Wrap" 
+                           Visibility="{Binding SelectedImagePath, Converter={StaticResource StringToVisibilityConverter}}"
+                           Margin="0,5"/>
+
+                <!-- Create User Button -->
+                <Button Content="Create User" Command="{Binding CreateUserCommand}" Margin="0,15,0,0" Padding="5"/>
+            </StackPanel>
+        </Border>
+
+        <!-- User Selection Section -->
+        <Border Grid.Column="1" BorderBrush="#CCCCCC" BorderThickness="1" Margin="10" Padding="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Select User" FontWeight="Bold" FontSize="16" Margin="0,0,0,15"/>
+
+                <ListBox Grid.Row="1" ItemsSource="{Binding Users}" 
+                         SelectedItem="{Binding SelectedUser}"
+                         Margin="0,0,0,10">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding ImagePath}" Width="40" Height="40" Margin="0,0,10,0"/>
+                                <TextBlock Text="{Binding Username}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Delete User" Command="{Binding DeleteUserCommand}" Margin="5" Padding="5"/>
+                    <Button Content="Play" Command="{Binding PlayCommand}" Margin="5" Padding="5,5,10,5"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

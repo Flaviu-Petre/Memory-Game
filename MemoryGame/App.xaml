@@ -1,0 +1,13 @@
+﻿<Application x:Class="MemoryGame.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:MemoryGame"
+             xmlns:converters="clr-namespace:MemoryGame.Converters"
+             StartupUri="Views/LoginView.xaml">
+    <Application.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:BoolToVisibilityInverseConverter x:Key="BoolToVisibilityInverseConverter"/>
+        <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+        <converters:ImagePathConverter x:Key="ImagePathConverter"/>
+    </Application.Resources>
+</Application>

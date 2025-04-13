@@ -1,0 +1,95 @@
+﻿<Window x:Class="MemoryGame.Views.GameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MemoryGame.Views"
+        xmlns:vm="clr-namespace:MemoryGame.ViewModels"
+        mc:Ignorable="d"
+        Title="Memory Game" Height="600" Width="800"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <vm:GameViewModel />
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Menu Bar -->
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="Category">
+                    <MenuItem Header="ItalianBrainrot" Command="{Binding SetCategoryCommand}" CommandParameter="ItalianBrainrot"/>
+                    <MenuItem Header="SuperMario" Command="{Binding SetCategoryCommand}" CommandParameter="SuperMario"/>
+                    <MenuItem Header="Art" Command="{Binding SetCategoryCommand}" CommandParameter="Art"/>
+                </MenuItem>
+                <MenuItem Header="New Game" Command="{Binding NewGameCommand}"/>
+                <MenuItem Header="Open Game" Command="{Binding OpenGameCommand}"/>
+                <MenuItem Header="Save Game" Command="{Binding SaveGameCommand}"/>
+                <MenuItem Header="Statistics" Command="{Binding StatisticsCommand}"/>
+                <Separator/>
+                <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
+            </MenuItem>
+            <MenuItem Header="Options">
+                <MenuItem Header="Standard (4x4)" Command="{Binding SetBoardSizeCommand}" CommandParameter="Standard"/>
+                <MenuItem Header="Custom" Command="{Binding SetBoardSizeCommand}" CommandParameter="Custom"/>
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="About" Command="{Binding AboutCommand}"/>
+            </MenuItem>
+        </Menu>
+
+        <!-- Game Board -->
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Game Info Panel -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                <TextBlock Text="Player: " FontWeight="Bold" Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding CurrentUser.Username}" Margin="0,0,15,0"/>
+                <Image Source="{Binding CurrentUser.ImagePath, Converter={StaticResource ImagePathConverter}}" Width="32" Height="32" Margin="0,0,10,0"/>
+                <TextBlock Text="Time Left: " FontWeight="Bold" Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding TimeLeft}" Margin="0,0,15,0"/>
+                <TextBlock Text="Category: " FontWeight="Bold" Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding CurrentCategory}" Margin="0,0,15,0"/>
+            </StackPanel>
+
+            <!-- Game Board -->
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding Cards}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="{Binding Rows}" Columns="{Binding Columns}"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding DataContext.FlipCardCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                CommandParameter="{Binding}" 
+                                Margin="5"
+                                IsEnabled="{Binding IsActive}">
+                            <Grid>
+                                <Image Source="{Binding BackImagePath}" Visibility="{Binding IsFlipped, Converter={StaticResource BoolToVisibilityInverseConverter}}"/>
+                                <Image Source="{Binding FrontImagePath}" Visibility="{Binding IsFlipped, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            </Grid>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+
+        <!-- Status Bar -->
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <TextBlock Text="{Binding StatusMessage}"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
